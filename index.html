@@ -498,7 +498,7 @@
         }
 
         function handleLogin() {
-            try {
+            
                 console.log('handleLogin called'); // Debug
                 const username = document.getElementById('username').value.trim().toLowerCase();
                 const password = document.getElementById('password').value.trim();
@@ -597,12 +597,7 @@
 
                 showMessageBox("Sign up successful! You can now log in.", () => {
                     toggleAuthMode(new Event('click'));
-                });
-            } catch (e) {
-                console.error('Error in handleSignUp:', e);
-                document.getElementById('loginError').textContent = 'Signup error. Please try again.';
-                document.getElementById('loginError').style.display = 'block';
-            }
+                });}
         }
 
         function loginSuccess(isDemo) {
@@ -739,8 +734,6 @@
             type();
         }
 
-        document.addEventListener('DOMContentLoaded', () => {
-            console.log('DOM loaded'); // Debug
             const authTitle = document.getElementById('authTitle');
             const adminOnlyMsg = document.getElementById('adminOnlyMsg');
             const loginBtn = document.getElementById('loginBtn');
@@ -766,6 +759,6 @@
                     }
                 });
             }
-        });
+    
 </body>
 </html>
