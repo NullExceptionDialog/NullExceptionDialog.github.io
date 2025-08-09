@@ -341,7 +341,7 @@
     </style>
 </head>
 <body>
-    <div id="customMessageBox">
+    <div id="customMessageBox" role="alertdialog" aria-modal="true" aria-labelledby="messageBoxText" tabindex="-1">
         <div id="messageBoxContent">
             <p id="messageBoxText"></p>
             <button onclick="closeMessageBox()">OK</button>
@@ -497,7 +497,18 @@
             }
         }
 
-        function handleLogin() {
+        
+        async function sha256Hex(message) {
+            const encoder = new TextEncoder();
+            const data = encoder.encode(message);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+            return buf2hex(new Uint8Array(hashBuffer));
+        }
+        function buf2hex(buffer) {
+            return Array.prototype.map.call(buffer, x => ('00' + x.toString(16)).slice(-2)).join('');
+        }
+    
+        async function handleLogin() {
             const username = document.getElementById('username').value.trim();
             const password = document.getElementById('password').value.trim();
             const error = document.getElementById('loginError');
@@ -542,50 +553,10 @@
 
             const registeredUsers = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
             // SECURITY WARNING: btoa is insecure for production. Use a backend with proper hashing (e.g., bcrypt).
-            // TODO: Replace with server-side hashing (bcrypt/argon2). btoa is insecure for real auth.
-            const passwordHash = btoa(password);
-
-            const user = registeredUsers.find(u => u.username === username && u.passwordHash === passwordHash);
-
-            if (user) {
-                loginSuccess(false);
-            } else {
-                error.textContent = "Invalid username or password.";
-                error.style.display = "block";
-            }
-        }
-
-        function handleSignUp() {
-            const username = document.getElementById('username').value.trim();
-            const password = document.getElementById('password').value.trim();
-            const error = document.getElementById('loginError');
-
-            error.textContent = '';
-            error.style.display = 'none';
-
-            if (!username || !password) {
-                error.textContent = "Please enter both username and password.";
-                error.style.display = "block";
-                return;
-            }
-
-            if (password.length < 8 || !/[A-Z]/.test(password) || !/[0-9]/.test(password) || !/[^A-Za-z0-9]/.test(password)) {
-                error.textContent = "Password must be 8+ characters with at least one uppercase letter, number, and special character.";
-                error.style.display = "block";
-                return;
-            }
-
-            let registeredUsers = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
-            if (registeredUsers.some(u => u.username.toLowerCase() === username.toLowerCase())) {
-                error.textContent = "Username already taken. Please choose another.";
-                error.style.display = "block";
-                return;
-            }
-
-            // SECURITY WARNING: btoa is insecure for production. Use a backend with proper hashing (e.g., bcrypt).
-            // TODO: Replace with server-side hashing (bcrypt/argon2). btoa is insecure for real auth.
-            const passwordHash = btoa(password);
-            registeredUsers.push({ username: username, passwordHash: passwordHash });
+                        const saltBytes = crypto.getRandomValues(new Uint8Array(16));
+            const saltHex = buf2hex(saltBytes);
+            const hashHex = await sha256Hex(password + saltHex);
+            registeredUsers.push({ username: username, salt: saltHex, hash: hashHex });
             localStorage.setItem('registeredUsers', JSON.stringify(registeredUsers));
 
             showMessageBox("Sign up successful! You can now log in.", () => {
@@ -692,6 +663,21 @@ function loginSuccess(isDemo) { isDemoSession = !!isDemo;
             startInactivityTimer(isDemoUser);
         }
 
+        
+        function trapFocus(modal) {
+            const FOCUSABLE = 'a[href], button, textarea, input, select, [tabindex]:not([tabindex="-1"])';
+            function handleKey(e){
+                if (e.key !== 'Tab') return;
+                const focusable = Array.from(modal.querySelectorAll(FOCUSABLE)).filter(el=>!el.hasAttribute('disabled') && !el.getAttribute('aria-hidden'));
+                if (focusable.length === 0) return;
+                const first = focusable[0];
+                const last = focusable[focusable.length - 1];
+                if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+                else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+            }
+            modal.addEventListener('keydown', handleKey);
+        }
+
         function typeWriter(element, text, speed = 50, callback = null) {
             let i = 0;
             element.textContent = '';
@@ -710,6 +696,10 @@ function loginSuccess(isDemo) { isDemoSession = !!isDemo;
         }
 
         document.addEventListener('DOMContentLoaded', () => {
+            const loginModalEl = document.getElementById('loginModal');
+            const userEl = document.getElementById('username');
+            if (loginModalEl) { trapFocus(loginModalEl); if (userEl) userEl.focus(); }
+
             const authTitle = document.getElementById('authTitle');
             const adminOnlyMsg = document.getElementById('adminOnlyMsg');
             if (authTitle) typeWriter(authTitle, 'Login', 70);
