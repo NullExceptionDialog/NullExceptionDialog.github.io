@@ -614,8 +614,7 @@ function loginSuccess(isDemo) { isDemoSession = !!isDemo;
 
         function startInactivityTimer(isDemo) {
             remainingTime = isDemo ? 60 : 120; // Increased demo timer to 60s
-            clearTimeout(inactivityTimer);
-            clearInterval(countdownInterval);
+                        clearInterval(countdownInterval);
             updateCountdownDisplay();
 
             console.log(`[startInactivityTimer] Starting timer. isDemo: ${isDemo}, initial remainingTime: ${remainingTime}`);
@@ -724,6 +723,16 @@ function loginSuccess(isDemo) { isDemoSession = !!isDemo;
                 }
             });
         }
+    
+        document.addEventListener("keydown", (e)=>{
+            const box = document.getElementById("customMessageBox");
+            if (!box) return;
+            if (box.style.display !== "flex") return;
+            if (e.key === "Escape") closeMessageBox();
+        });
+        const msgBoxEl = document.getElementById("customMessageBox");
+        if (msgBoxEl) { msgBoxEl.addEventListener("click", (e)=>{ if (e.target === msgBoxEl) closeMessageBox(); }); }
+
     </script>
 </body>
 </html>
