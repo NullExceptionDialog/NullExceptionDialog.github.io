@@ -552,19 +552,62 @@
             }
 
             const registeredUsers = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
-            // SECURITY WARNING: btoa is insecure for production. Use a backend with proper hashing (e.g., bcrypt).
+            let user = registeredUsers.find(u => u.username.toLowerCase() === username.toLowerCase());
+            if (user) {
+                if (user.hash && user.salt) {
+                    const testHash = await sha256Hex(password + user.salt);
+                    if (testHash === user.hash) { loginSuccess(false); return; }
+                } else if (user.passwordHash) {
+                    // legacy fallback + upgrade
+                    if (btoa(password) === user.passwordHash) {
                         const saltBytes = crypto.getRandomValues(new Uint8Array(16));
+                        const saltHex = buf2hex(saltBytes);
+                        const newHash = await sha256Hex(password + saltHex);
+                        const updated = registeredUsers.map(u => u.username.toLowerCase()===username.toLowerCase() ? { username: u.username, salt: saltHex, hash: newHash } : u);
+                        localStorage.setItem('registeredUsers', JSON.stringify(updated));
+                        loginSuccess(false);
+                        return;
+                    }
+                }
+            }
+            error.textContent = "Invalid username or password.";
+            error.style.display = "block";
+        }
+
+        
+        async function handleSignUp() {
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value.trim();
+            const error = document.getElementById('loginError');
+
+            error.textContent = '';
+            error.style.display = 'none';
+
+            if (!username || !password) {
+                error.textContent = "Please enter both username and password.";
+                error.style.display = "block";
+                return;
+            }
+            if (password.length < 8 || !/[A-Z]/.test(password) || !/[0-9]/.test(password) || !/[^A-Za-z0-9]/.test(password)) {
+                error.textContent = "Password must be 8+ characters with at least one uppercase letter, number, and special character.";
+                error.style.display = "block";
+                return;
+            }
+            let registeredUsers = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
+            if (registeredUsers.some(u => u.username.toLowerCase() === username.toLowerCase())) {
+                error.textContent = "Username already taken. Please choose another.";
+                error.style.display = "block";
+                return;
+            }
+            const saltBytes = crypto.getRandomValues(new Uint8Array(16));
             const saltHex = buf2hex(saltBytes);
             const hashHex = await sha256Hex(password + saltHex);
             registeredUsers.push({ username: username, salt: saltHex, hash: hashHex });
             localStorage.setItem('registeredUsers', JSON.stringify(registeredUsers));
-
-            showMessageBox("Sign up successful! You can now log in.", () => {
-                toggleAuthMode(new Event('click'));
-            });
+            showMessageBox("Sign up successful! You can now log in.", () => { toggleAuthMode(new Event('click')); });
         }
 
-        let isDemoSession=false;
+let isDemoSession=false;
 function loginSuccess(isDemo) { isDemoSession = !!isDemo;
             const loginModal = document.getElementById('loginModal');
             const main = document.getElementById('main-content');
