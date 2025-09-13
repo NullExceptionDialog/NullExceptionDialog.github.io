@@ -4,15 +4,13 @@
   <meta charset="UTF-8">
   <title>NullExceptionDialog</title>
   <style>
-    /* Base Windows 10 theme (default) */
+    /* Base */
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: #f3f3f3;
-      color: #222;
       margin: 0;
       padding: 0;
       line-height: 1.6;
-      transition: all 0.3s ease;
+      transition: background 0.5s ease, color 0.5s ease;
     }
     header {
       text-align: center;
@@ -35,9 +33,7 @@
       margin-bottom: 2rem;
       padding: 1.5rem;
       border-radius: 0.75rem;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-      background: #fff;
-      transition: all 0.3s ease;
+      transition: background 0.5s ease, box-shadow 0.5s ease, border 0.5s ease;
     }
     section h2 {
       margin-bottom: 1rem;
@@ -45,21 +41,47 @@
     footer {
       text-align: center;
       padding: 1rem;
+      transition: background 0.5s ease, color 0.5s ease;
+    }
+    a {
+      text-decoration: none;
+      transition: color 0.3s ease, text-shadow 0.3s ease;
+    }
+
+    /* Windows 10 Theme (default) */
+    body.win10 {
+      background: #f3f3f3;
+      color: #222;
+    }
+    body.win10 section {
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 0.5rem;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    }
+    body.win10 footer {
       background: #eee;
       color: #666;
     }
-    a {
+    body.win10 a {
       color: #0066cc;
-      text-decoration: none;
     }
-    a:hover {
+    body.win10 a:hover {
       text-decoration: underline;
     }
+    body.win10 select {
+      background: #fff;
+      border: 1px solid #ccc;
+      color: #111;
+      padding: 0.3rem 0.6rem;
+      border-radius: 0.2rem;
+    }
 
-    /* THEME: Frutiger Aero (turquoise glass) */
+    /* Frutiger Aero Theme */
     body.aero {
       background: linear-gradient(135deg, rgba(0,180,200,0.85), rgba(0,130,180,0.85));
       color: #fdfdfd;
+      backdrop-filter: blur(6px);
     }
     body.aero section {
       background: rgba(255,255,255,0.35);
@@ -76,11 +98,26 @@
     body.aero footer {
       background: rgba(0,100,120,0.6);
       color: #e0faff;
+      backdrop-filter: blur(5px);
+    }
+    body.aero a {
+      color: #00f0ff;
+    }
+    body.aero a:hover {
+      text-shadow: 0 0 8px #00f0ff;
+    }
+    body.aero select {
+      background: rgba(255,255,255,0.3);
+      border: 1px solid rgba(255,255,255,0.5);
+      color: #111;
+      padding: 0.3rem 0.6rem;
+      border-radius: 0.3rem;
+      backdrop-filter: blur(4px);
     }
 
-    /* THEME: Frutiger Metro */
+    /* Frutiger Metro Theme */
     body.metro {
-      background: #222;
+      background: #1e1e1e;
       color: #fff;
     }
     body.metro header h1 {
@@ -95,19 +132,22 @@
       border-radius: 0;
       box-shadow: none;
     }
+    body.metro footer {
+      background: #0078d7;
+      color: #fff;
+    }
     body.metro a {
       color: yellow;
     }
-
-    /* THEME: Windows 10 */
-    body.win10 {
-      background: #f3f3f3;
-      color: #222;
+    body.metro a:hover {
+      color: #ffeb3b;
+      text-shadow: 0 0 6px #ffeb3b;
     }
-    body.win10 section {
-      background: #fff;
-      border: 1px solid #ddd;
-      border-radius: 0.5rem;
+    body.metro select {
+      background: #0078d7;
+      border: none;
+      color: #fff;
+      padding: 0.4rem 0.7rem;
     }
   </style>
 </head>
@@ -115,6 +155,7 @@
   <header>
     <h1>NullExceptionDialog</h1>
     <p>A curious tinkerer, somewhere between code and creativity.</p>
+    <p>Still using the inner silly of myself. :P</p>
 
     <label for="theme">Choose style:</label>
     <select id="theme">
@@ -131,6 +172,7 @@
         I enjoy working on small projects, usually involving code, electronics, or anything that makes
         LEDs blink and motors spin.  
         Sometimes my projects work on the first try — most times, they don’t (and that’s half the fun).
+        And if I break stuff? Oh well, life's too short to cry about it.
       </p>
     </section>
 
@@ -147,16 +189,33 @@
     <section>
       <h2>Find Me Online</h2>
       <p>
-        Most of my experiments live on GitHub:  
-        👉 <a href="https://github.com/nullexceptiondialog" target="_blank">github.com/nullexceptiondialog</a>
+        Most of my public experiments live on GitHub:  
+        👉 <a href="https://github.com/nullexceptiondialog" target="_blank">github.com/nullexceptiondialog</a><br><br>
+        But the rest is just in my computer. I mean, I could easily release them on GitHub but I'm too lazy for that. :v
       </p>
     </section>
 
     <section>
       <h2>A Little Extra</h2>
       <p>
+        I am Turkish, I've never left Türkiye in my life. I don't plan on it.<br>
+        You don't really have to know my age, I forgot about it long ago. (I'm not ancient though)<br>
+        I am an absolute food gourmet, I love food.<br><br>
+        Honorable mention: If you disrespect Türkiye, Atatürk and Turkish people; you've chosen death.
+      </p>
+    </section>
+     
+    <section>
+      <h2>A Little Extra Part 2</h2>
+      <p>
         I like keeping things simple. Not everything has to be serious — sometimes a project is just
-        for fun, sometimes it teaches me something unexpected. Either way, I enjoy the process.
+        for fun, sometimes it teaches me something unexpected. Either way, I enjoy the process.<br><br>
+
+        My opinions' summaries:<br>
+        "Let life pass you by"<br>
+        "It's not what matters on the outside, but on the inside"<br>
+        "There are no hopeless people, only hopeless moments" - Atatürk<br><br>
+        %100 Turkish energy
       </p>
     </section>
   </main>
