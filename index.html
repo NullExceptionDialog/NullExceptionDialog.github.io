@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>NullExceptionDialog</title>
+  <style>
+    /* Base Windows 10 theme (default) */
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f3f3f3;
+      color: #222;
+      margin: 0;
+      padding: 0;
+      line-height: 1.6;
+      transition: all 0.3s ease;
+    }
+    header {
+      text-align: center;
+      padding: 3rem 1rem;
+    }
+    header h1 {
+      font-size: 3rem;
+      margin: 0;
+    }
+    header p {
+      font-size: 1.2rem;
+      color: #555;
+    }
+    main {
+      max-width: 800px;
+      margin: auto;
+      padding: 2rem;
+    }
+    section {
+      margin-bottom: 2rem;
+      padding: 1.5rem;
+      border-radius: 0.75rem;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+      background: #fff;
+      transition: all 0.3s ease;
+    }
+    section h2 {
+      margin-bottom: 1rem;
+    }
+    footer {
+      text-align: center;
+      padding: 1rem;
+      background: #eee;
+      color: #666;
+    }
+    a {
+      color: #0066cc;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+
+    /* THEME: Frutiger Aero (turquoise glass) */
+    body.aero {
+      background: linear-gradient(135deg, rgba(0,180,200,0.85), rgba(0,130,180,0.85));
+      color: #fdfdfd;
+    }
+    body.aero section {
+      background: rgba(255,255,255,0.35);
+      border: 1px solid rgba(255,255,255,0.5);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      color: #111;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+    }
+    body.aero header h1 {
+      color: #e0faff;
+      text-shadow: 0 0 15px rgba(0,255,255,0.7);
+    }
+    body.aero footer {
+      background: rgba(0,100,120,0.6);
+      color: #e0faff;
+    }
+
+    /* THEME: Frutiger Metro */
+    body.metro {
+      background: #222;
+      color: #fff;
+    }
+    body.metro header h1 {
+      background: #ff3c3c;
+      display: inline-block;
+      padding: 0.5rem 1rem;
+      color: white;
+    }
+    body.metro section {
+      background: #0078d7;
+      color: #fff;
+      border-radius: 0;
+      box-shadow: none;
+    }
+    body.metro a {
+      color: yellow;
+    }
+
+    /* THEME: Windows 10 */
+    body.win10 {
+      background: #f3f3f3;
+      color: #222;
+    }
+    body.win10 section {
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 0.5rem;
+    }
+  </style>
+</head>
+<body class="win10">
+  <header>
+    <h1>NullExceptionDialog</h1>
+    <p>A curious tinkerer, somewhere between code and creativity.</p>
+
+    <label for="theme">Choose style:</label>
+    <select id="theme">
+      <option value="win10">Windows 10</option>
+      <option value="aero">Frutiger Aero</option>
+      <option value="metro">Frutiger Metro</option>
+    </select>
+  </header>
+
+  <main>
+    <section>
+      <h2>About Me</h2>
+      <p>
+        I enjoy working on small projects, usually involving code, electronics, or anything that makes
+        LEDs blink and motors spin.  
+        Sometimes my projects work on the first try — most times, they don’t (and that’s half the fun).
+      </p>
+    </section>
+
+    <section>
+      <h2>What I Do</h2>
+      <p>
+        - Building with <strong>Arduino</strong> and robots 🤖 <br>
+        - Writing little experiments in code <br>
+        - Exploring technology just for the joy of it <br>
+        - Learning by breaking things (carefully, usually)
+      </p>
+    </section>
+
+    <section>
+      <h2>Find Me Online</h2>
+      <p>
+        Most of my experiments live on GitHub:  
+        👉 <a href="https://github.com/nullexceptiondialog" target="_blank">github.com/nullexceptiondialog</a>
+      </p>
+    </section>
+
+    <section>
+      <h2>A Little Extra</h2>
+      <p>
+        I like keeping things simple. Not everything has to be serious — sometimes a project is just
+        for fun, sometimes it teaches me something unexpected. Either way, I enjoy the process.
+      </p>
+    </section>
+  </main>
+
+  <footer>
+    &copy; 2025 NullExceptionDialog. Made with curiosity and caffeine.
+  </footer>
+
+  <script>
+    const themeSelect = document.getElementById('theme');
+    themeSelect.addEventListener('change', (e) => {
+      document.body.className = e.target.value;
+    });
+  </script>
+</body>
+</html>
